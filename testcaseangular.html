@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Information</title>
+  <link rel="stylesheet" href="testcaseangular.css">
+</head>
+<body>
+
+<div class="bnx-student-container">
+  <h2>Student Information</h2>
+  <div class="bnx-student-group">
+    <label for="sortDropdown">Sort By:</label>
+    <select class="bnx-student-control" id="sortDropdown">
+      <option value="name">Name</option>
+      <option value="age">Age</option>
+      <option value="department">Department</option>
+    </select>
+  </div>
+  <div class="bnx-student-group">
+    <label for="searchInput">Search:</label>
+    <input type="text" class="bnx-student-control" id="searchInput" placeholder="Enter search keyword">
+  </div>
+  <div class="bnx-student-group">
+    <label for="marksInput">Filter by Marks:</label>
+    <input type="number" class="bnx-student-control" id="marksInput" placeholder="Enter minimum marks">
+    <button type="button" class="btn btn-primary" id="filterButton">Filter</button>
+  </div>
+  <table class="bnx-student-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Department</th>
+        <th>Total Marks</th>
+        
+      </tr>
+    </thead>
+    <tbody id="studentTableBody">
+     
+    </tbody>
+  </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  const students = [
+    { name: "Stella", age: 19, department: "Computer Science", totalMarks: 70 },
+    { name: "Alees", age: 19, department: "IT", totalMarks: 100 },
+    { name: "Akhil", age: 15, department: "CS", totalMarks: 50 },
+    { name: "Zara", age: 18, department: "Mech", totalMarks: 60 },
+    { name: "Dileep", age: 23, department: "EEE", totalMarks: 65 },
+    { name: "Mohan", age: 17, department: "CS", totalMarks: 43 },
+    { name: "Avin", age: 18, department: "CS", totalMarks: 99 },
+    { name: "Riya", age: 25, department: "IT", totalMarks: 37 },
+    { name: "Lalitha", age: 19, department: "DT", totalMarks: 59 }
+  ];
+
+  function displayStudents(studentData) {
+    const tableBody = $("#studentTableBody");
+    tableBody.empty();
+    studentData.forEach(student => {
+      tableBody.append(`<tr>
+                          <td>${student.name}</td>
+                          <td>${student.age}</td>
+                          <td>${student.department}</td>
+                          <td>${student.totalMarks}</td>
+                        </tr>`);
+    });
+  }
+
+  function sortStudents(field) {
+    students.sort((a, b) => a[field] > b[field] ? 1 : -1);
+    displayStudents(students);
+  }
+
+  $("#sortDropdown").change(function() {
+    const selectedField = $(this).val();
+    sortStudents(selectedField);
+  });
+
+  function searchStudents(keyword) {
+    const filteredStudents = students.filter(student => {
+      return Object.values(student).some(value =>
+        value.toString().toLowerCase().includes(keyword.toLowerCase())
+      );
+    });
+    displayStudents(filteredStudents);
+  }
+
+  $("#searchInput").on("input", function() {
+    const searchKeyword = $(this).val();
+    searchStudents(searchKeyword);
+  });
+
+  $("#filterButton").click(function() {
+    const minMarks = parseInt($("#marksInput").val());
+    const filteredStudents = students.filter(student => student.totalMarks >= minMarks);
+    displayStudents(filteredStudents);
+  });
+
+  displayStudents(students);
+</script>
+
+</body>
+</html>
